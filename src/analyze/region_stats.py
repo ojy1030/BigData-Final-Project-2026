@@ -2,17 +2,13 @@
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import col, expr, count, round
 
-# 샌드박스 하이브 메타스토어 주소 강제 연동 세팅
-spark = SparkSession.builder \
-    .appName("AnimalAnalysis-Region") \
-    .config("hive.metastore.uris", "thrift://sandbox-hdp.hortonworks.com:9083") \
-    .enableHiveSupport() \
-    .getOrCreate()
+# 스파크 세션 기본 생성
+spark = SparkSession.builder.appName("AnimalAnalysis-Region").getOrCreate()
 
 # 정제된 데이터 로드
 cleaned_df = spark.read.parquet("hdfs:///user/maria_dev/animal_project/processed/")
 
-# [분석 1] 지역 종합 통계
+# [분석 1] 지역 종합 통계 계산
 region_stats = cleaned_df.groupBy("orgNm").agg(
     count("*").alias("total_cases"),
     round(expr("sum(case when processState like '%입양%' then 1 else 0 end) * 100.0 / count(*)"), 2).alias("adoption_rate"),
@@ -21,36 +17,16 @@ region_stats = cleaned_df.groupBy("orgNm").agg(
     round(expr("sum(case when processState like '%안락사%' then 1 else 0 end) / nullif(sum(case when processState like '%자연사%' then 1 else 0 end), 0)"), 2).alias("euthanasia_to_natural_ratio")
 ).orderBy(col("total_cases").desc())
 
-# 🌟 [분석 1 저장] HDFS에 Parquet 형식으로 물리 저장
+# HDFS에 Parquet 물리 파일 저장
 hdfs_path_stats = "hdfs:///user/maria_dev/animal_project/mart/region_stats"
 region_stats.write.mode("overwrite").parquet(hdfs_path_stats)
 
-# Hive 메타스토어에 외부 테이블 강제 등록 (문법 꼬임 방지 처리)
-spark.sql("DROP TABLE IF EXISTS default.hive_region_stats")
-create_stats_query = (
-    "CREATE EXTERNAL TABLE default.hive_region_stats ( "
-    "orgNm STRING, total_cases BIGINT, adoption_rate DOUBLE, "
-    "euthanasia_rate DOUBLE, return_owner_rate DOUBLE, euthanasia_to_natural_ratio DOUBLE "
-    ") STORED AS PARQUET LOCATION '" + hdfs_path_stats + "'"
-)
-spark.sql(create_stats_query)
-
-
-# [분석 2] 히트맵용 데이터
+# [분석 2] 히트맵용 데이터 계산
 top_15 = [row['orgNm'] for row in region_stats.limit(15).select("orgNm").collect()]
 heatmap_data = cleaned_df.filter(col("orgNm").isin(top_15)).groupBy("orgNm", "happenMonth").agg(count("*").alias("case_count"))
 
-# 🌟 [분석 2 저장] HDFS에 Parquet 형식으로 물리 저장
+# HDFS에 Parquet 물리 파일 저장
 hdfs_path_heatmap = "hdfs:///user/maria_dev/animal_project/mart/region_heatmap"
 heatmap_data.write.mode("overwrite").parquet(hdfs_path_heatmap)
-
-# Hive 메타스토어에 외부 테이블 강제 등록 (문법 꼬임 방지 처리)
-spark.sql("DROP TABLE IF EXISTS default.hive_region_heatmap")
-create_heatmap_query = (
-    "CREATE EXTERNAL TABLE default.hive_region_heatmap ( "
-    "orgNm STRING, happenMonth STRING, case_count BIGINT "
-    ") STORED AS PARQUET LOCATION '" + hdfs_path_heatmap + "'"
-)
-spark.sql(create_heatmap_query)
 
 spark.stop()
