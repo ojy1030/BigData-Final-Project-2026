@@ -16,12 +16,12 @@ OUTPUT_FILE = "data/raw_animals.csv"
 
 # 모드별 수집 범위 세팅
 if IS_GRADING_MODE:
-    print("💡 [채점 모드] 가동: 교수님 채점용으로 최소 데이터만 초고속 수집합니다.")
+    print(" [채점 모드] 가동: 교수님 채점용으로 최소 데이터만 초고속 수집합니다.")
     TARGET_YEARS = ["2026"]
     MAX_PAGES = 1
     NUM_ROWS = 10  # 테스트용 10건만 호출
 else:
-    print("🚀 [전체 수집 모드] 가동: 100MB 이상 필수 요구사항 충족을 위해 대용량 수집을 시작합니다.")
+    print(" [전체 수집 모드] 가동: 100MB 이상 필수 요구사항 충족을 위해 대용량 수집을 시작합니다.")
     TARGET_YEARS = ["2024", "2025", "2026"]
     MAX_PAGES = 100  # 100MB 넘길 때까지 페이지 루프
     NUM_ROWS = 1000
@@ -98,11 +98,11 @@ if all_data:
     print(f"💾 파일 용량: {file_size_mb:.2f} MB")
     
     if IS_GRADING_MODE:
-        print("✅ [채점 모드] 수집 기능이 완벽하게 정상 작동합니다!")
+        print(" [채점 모드] 수집 기능이 완벽하게 정상 작동합니다!")
     else:
         if file_size_mb >= 100:
-            print("✅ 필수 요구사항 (100MB 이상) 충족 완료!")
+            print(" 필수 요구사항 (100MB 이상) 충족 완료!")
         else:
-            print("⚠️ 용량이 부족합니다. TARGET_YEARS를 늘리거나 MAX_PAGES를 키우세요.")
+            print(" 용량이 부족합니다. TARGET_YEARS를 늘리거나 MAX_PAGES를 키우세요.")
 else:
     print("❌ 수집된 데이터가 없습니다. API 키나 네트워크 상태를 확인하세요.")
