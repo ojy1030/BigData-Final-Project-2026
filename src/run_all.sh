@@ -13,7 +13,7 @@ export PYSPARK_DRIVER_PYTHON='/usr/bin/python3.6'
 
 # 1. 공공데이터 API 수집 가동 (로컬 data/raw_animals.csv 생성)
 echo "📥 [STEP 1] 공공데이터 API 실시간 대용량 수집 가동..."
-/usr/bin/python3.6 src/ingest/collect.py
+# /usr/bin/python3.6 src/ingest/collect.py
 
 # 2. 수집된 최신 CSV 파일을 HDFS 데이터 창고로 강제 업로드
 echo "📂 [STEP 2] 수집된 데이터를 HDFS 분산 파일 시스템에 적재..."
