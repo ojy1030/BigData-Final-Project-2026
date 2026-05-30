@@ -55,4 +55,3 @@ fig.write_html(output_filename)
 
 print(f"그래프가 '{output_filename}' 파일로 현재 폴더에 저장되었습니다!")
 
-spark.stop()
