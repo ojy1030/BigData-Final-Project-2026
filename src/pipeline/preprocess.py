@@ -32,3 +32,4 @@ cleaned_df = df \
 # 최종 마트 연산용 압축 저장
 cleaned_df.write.mode("overwrite").parquet("hdfs:///user/maria_dev/animal_project/processed/")
 spark.stop()
+#
