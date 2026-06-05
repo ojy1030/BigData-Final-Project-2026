@@ -106,3 +106,4 @@ if all_data:
             print(" 용량 부족")
 else:
     print(" 수집된 데이터 없음")
+    #

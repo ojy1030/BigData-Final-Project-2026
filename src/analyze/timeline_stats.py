@@ -45,3 +45,4 @@ hdfs_path_legal_zone = "hdfs:///user/maria_dev/animal_project/mart/legal_zone_st
 legal_zone_stats.write.mode("overwrite").option("header", "false").csv(hdfs_path_legal_zone)
 
 spark.stop()
+#

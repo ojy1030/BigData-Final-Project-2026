@@ -38,3 +38,4 @@ hdfs_path_keyword = "hdfs:///user/maria_dev/animal_project/mart/keyword_stats"
 keyword_stats.write.mode("overwrite").option("header", "false").csv(hdfs_path_keyword)
 
 spark.stop()
+#

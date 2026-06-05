@@ -33,3 +33,4 @@ hdfs_path_heatmap = "hdfs:///user/maria_dev/animal_project/mart/region_heatmap"
 heatmap_data.write.mode("overwrite").option("header", "false").csv(hdfs_path_heatmap)
 
 spark.stop()
+#

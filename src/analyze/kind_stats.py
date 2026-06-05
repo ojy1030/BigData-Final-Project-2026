@@ -51,3 +51,4 @@ hdfs_path_kind = "hdfs:///user/maria_dev/animal_project/mart/kind_stats"
 kind_stats.write.mode("overwrite").option("header", "false").csv(hdfs_path_kind)
 
 spark.stop()
+#
