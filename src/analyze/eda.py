@@ -28,7 +28,7 @@ print(" | ".join([str(null_stats[c]) for c in null_cols]))
 print("-"*65)
 
 
-# 수치형 데이터 지표 평가 
+# 수치형 데이터 지표 평가
 print("수치형 지표 요약 통계량:")
 
 analysis_df = df.withColumn("extracted_age", regexp_extract(col("age"), r"(\d+)", 1).cast("double"))
@@ -95,3 +95,4 @@ for row in state_rows:
 print("="*65 + "\n")
 
 spark.stop()
+#
