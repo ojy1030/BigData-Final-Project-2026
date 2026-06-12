@@ -114,7 +114,6 @@ try:
     ax.set_xlabel("Euthanasia Risk Probability (%)", fontsize=13)
     ax.set_ylabel("Extracted Trait Keywords", fontsize=13)
     
-    # 🌟 행동 성향 라벨 역시 길기 때문에 왼쪽 마진을 넉넉하게 고정 배정
     plt.subplots_adjust(left=0.32, right=0.95, top=0.9, bottom=0.12)
     plt.savefig("chart_keyword_euthanasia_hbar.png", dpi=300)
     plt.close()
